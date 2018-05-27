@@ -1,0 +1,38 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.i000.stock.user.dao.mapper.HoldMapper">
+
+    <resultMap id="Hold" type="com.i000.stock.user.dao.model.Hold">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="old_date" property="oldDate"/>
+        <result column="old_price" property="oldPrice"/>
+        <result column="old_rank" property="oldRank"/>
+        <result column="new_date" property="newDate"/>
+        <result column="new_rank" property="newRank"/>
+        <result column="new_price" property="newPrice"/>
+        <result column="hold_day" property="holdDay"/>
+        <result column="gain" property="gain"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="action" property="action"/>
+    </resultMap>
+
+    <select id="findByDate" resultMap="Hold">
+        select * from hold where new_date=#{date}
+    </select>
+
+    <select id="findTwoDay" resultType="java.time.LocalDate">
+         select DISTINCT new_date from hold ORDER BY new_date DESC limit 2
+    </select>
+
+    <select id="findTwoHold" resultMap="Hold">
+        select * from hold where 1=1
+        <foreach collection="dates" item="item" open="and new_date IN(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>
